@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Pokemon } from '../models/pokemon.model';
+import { IPokemon } from '../models/pokemon.model';
 
 @Component({
   selector: 'app-pokemon-card',
@@ -7,5 +7,8 @@ import { Pokemon } from '../models/pokemon.model';
   styleUrls: ['./pokemon-card.component.scss'],
 })
 export class PokemonCardComponent  {
-  @Input() pokemon!: Pokemon ;
+  @Input() pokemon!: IPokemon ;
+  clickFunction():void {
+    console.log(this.pokemon.url);
+  }
 }

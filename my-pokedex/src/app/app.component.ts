@@ -1,18 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Pokemon } from './models/pokemon.model';
+import { Component } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'my-pokedex';
-  pokemons: Pokemon[] = [];
-  constructor(){}
-  ngOnInit(): void {
-    this.pokemons.push({id:0, imageUrl:"gggg", name:"charizard"});
-    this.pokemons.push({id:1,imageUrl:"www",name:"pikachu"});
-  }
-
 }

@@ -1,0 +1,26 @@
+.pokemon-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    border: 5px solid white;
+    border-radius: 10px;
+    width: 200px;
+    height: 200px;
+    margin-top: 20px;
+    img {
+      border-radius: 30px;
+      width: 170px;
+      height: 150px;
+      background-color: white;
+    }
+    div {
+      margin-top: auto;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
