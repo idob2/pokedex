@@ -5,6 +5,7 @@
       class="search"
       [(ngModel)]="searchText"
       placeholder="Search by pokemon name"
+      (keyup.enter)="searchByNameAndType()"
     />
   </div>
 
@@ -14,6 +15,7 @@
       class="search"
       [(ngModel)]="searchTextType"
       placeholder="Search by pokemon type"
+      (keyup.enter)="searchByNameAndType()"
     />
     <button class="search-by-type-button" (click)="searchByNameAndType()">
       Search
