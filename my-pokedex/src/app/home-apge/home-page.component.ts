@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IPokemon } from '../models/pokemon.model';
-import { PokemoneService } from '../service/pokemon-service';
-
+import { PokemonDataService } from '../service/pokemon-data-service';
 
 @Component({
   selector: 'app-home-page',
@@ -10,35 +9,42 @@ import { PokemoneService } from '../service/pokemon-service';
 })
 export class HomePageComponent implements OnInit {
   pokemons: IPokemon[] = [];
-  pokemonsFiltered: IPokemon[] = [];
-  searchText:string ='';
-  constructor(
-    private pokemoneService: PokemoneService
-  ) {}
+  searchText: string = '';
+  searchTextType: string = '';
+  constructor(private pokemonDataService: PokemonDataService) {}
   ngOnInit(): void {
+    this.pokemonDataService.getAllPokemons();
     this.displayAllPokemons();
   }
-  displayAllPokemons():void{
-    this.pokemoneService
-    .fetchAllPokemons()
-    .subscribe((pokemonList: any) => {
-      for(const pokemon of pokemonList){
-        this.pokemoneService.fetchSinglePokemon(pokemon.url).subscribe((pokemoneData:any) => {
-          this.pokemons.push({imageUrl:pokemoneData.sprites.front_default,name:pokemoneData.name,url:pokemon.url})
-          this.pokemonsFiltered.push({imageUrl:pokemoneData.sprites.front_default,name:pokemoneData.name,url:pokemon.url})
-        })
-      }
-    });
+
+  displayAllPokemons(): void {
+    this.pokemons = this.pokemonDataService.pokemons;
   }
-  search():void{
-    if(this.searchText === ''){
-      this.pokemons = [...this.pokemonsFiltered]
-    }
-    else{
-      this.pokemons.splice(0, this.pokemons.length)
-      for(const pokemon of this.pokemonsFiltered){
-        if(pokemon.name.startsWith(this.searchText)){
-          this.pokemons.push(pokemon);
+
+  searchByNameAndType(): void {
+    if (this.searchText === '' && this.searchTextType === '') {
+      this.pokemons = [...this.pokemonDataService.pokemons];
+    } else {
+      const idOfSelectedPokemons: number[] = [];
+      this.pokemons = [];
+      for (const pokemonDetails of this.pokemonDataService.pokemonsDetails) {
+        const nameMatches =
+          this.searchText === '' ||
+          pokemonDetails.name.startsWith(this.searchText);
+        const typeMatches =
+          this.searchTextType === '' ||
+          pokemonDetails.types.some((type) =>
+            type.startsWith(this.searchTextType)
+          );
+        if (nameMatches && typeMatches) {
+          idOfSelectedPokemons.push(pokemonDetails.id);
+        }
+      }
+      for (const id of idOfSelectedPokemons) {
+        for (const pokemon of this.pokemonDataService.pokemons) {
+          if (pokemon.id === id) {
+            this.pokemons.push(pokemon);
+          }
         }
       }
     }

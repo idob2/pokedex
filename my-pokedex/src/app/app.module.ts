@@ -1,20 +1,32 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {RouterModule, Routes} from "@angular/router";
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 import { HomePageComponent } from './home-apge/home-page.component';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
 
-const appRoutes: Routes =[
-  {path:'', component: HomePageComponent}
+const appRoutes: Routes = [
+  { path: 'pokemon-details/:id', component: PokemonDetailsComponent },
+  { path: 'home-page', component: HomePageComponent },
 ];
 @NgModule({
-  declarations: [AppComponent, PokemonCardComponent, HomePageComponent, PokemonDetailsComponent],
-  imports: [BrowserModule, HttpClientModule, FormsModule, RouterModule.forRoot(appRoutes)],
+  declarations: [
+    AppComponent,
+    PokemonCardComponent,
+    HomePageComponent,
+    PokemonDetailsComponent,
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    RouterModule.forRoot(appRoutes),
+  ],
+  exports: [RouterModule],
   providers: [],
   bootstrap: [AppComponent],
 })

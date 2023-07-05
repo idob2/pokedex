@@ -1,12 +1,26 @@
-<div class="search-pokemon">
-  <input
-    type="text"
-    class="search"
-    [(ngModel)]="searchText"
-    placeholder="Search by pokemon name"
-  />
-  <button (click)="search()">Search</button>
+<div>
+  <div class="search-pokemon">
+    <input
+      type="text"
+      class="search"
+      [(ngModel)]="searchText"
+      placeholder="Search by pokemon name"
+    />
+  </div>
+
+  <div class="search-pokemon-type">
+    <input
+      type="text"
+      class="search"
+      [(ngModel)]="searchTextType"
+      placeholder="Search by pokemon type"
+    />
+    <button class="search-by-type-button" (click)="searchByNameAndType()">
+      Search
+    </button>
+  </div>
 </div>
+
 <div class="cards">
   <div class="card-container" *ngFor="let pokemon of pokemons">
     <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
