@@ -11,6 +11,12 @@ export interface IPokemonDetails {
   weight: number;
   types: string[];
   species: string;
+  stats: IStats[],
+}
+
+export interface IStats {
+  name: string, 
+  value: number
 }
 
 export interface IResults {

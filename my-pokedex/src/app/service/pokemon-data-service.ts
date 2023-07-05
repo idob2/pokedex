@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { IPokemon, IPokemonDetails } from '../models/pokemon.model';
+import { IPokemon, IPokemonDetails, IStats } from '../models/pokemon.model';
 import { PokemonService } from './pokemon-service';
 
 @Injectable({
@@ -17,9 +17,8 @@ export class PokemonDataService implements OnInit {
 
   async getAllPokemons(): Promise<void> {
     try {
-        this.pokemons.splice(0,this.pokemons.length);
-        this.pokemonsDetails.splice(0,this.pokemonsDetails.length);
-
+      this.pokemons.splice(0, this.pokemons.length);
+      this.pokemonsDetails.splice(0, this.pokemonsDetails.length);
       const pokemonList = await this.pokemonService.fetchAllPokemons();
 
       for (const pokemon of pokemonList) {
@@ -32,6 +31,12 @@ export class PokemonDataService implements OnInit {
           url: pokemon.url,
           id: pokemoneData.id,
         });
+        const statValues: IStats[] = [];
+        for (const stat of pokemoneData.stats) {
+          const name = stat.stat.name;
+          const value = stat.base_stat;
+          statValues.push({ name: name, value: value });
+        }
         this.pokemonsDetails.push({
           id: pokemoneData.id,
           name: pokemoneData.name,
@@ -41,6 +46,7 @@ export class PokemonDataService implements OnInit {
           types: pokemoneData.types.map(
             (type: { type: { name: string } }) => type.type.name
           ),
+          stats: statValues,
         });
       }
     } catch (error) {
