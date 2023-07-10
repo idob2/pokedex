@@ -8,10 +8,13 @@ import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 import { HomePageComponent } from './home-apge/home-page.component';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 const appRoutes: Routes = [
   { path: 'pokemon-details/:id', component: PokemonDetailsComponent },
   { path: 'home-page', component: HomePageComponent },
+  { path: 'login-page', component: LoginPageComponent},
+  { path: '', redirectTo: 'login-page', pathMatch: 'full' },
 ];
 @NgModule({
   declarations: [
@@ -19,6 +22,7 @@ const appRoutes: Routes = [
     PokemonCardComponent,
     HomePageComponent,
     PokemonDetailsComponent,
+    LoginPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,15 +1,32 @@
-div {
+%shared-divs{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 5px;
+  
+}
+
+.main-div{
+  @extend %shared-divs;
+.search-pokemon {
+  @extend %shared-divs;
   input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 190px;
+    width: 210px;
+  }
+}
+.search-pokemon-type {
+  @extend %shared-divs;
+  select{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 160px;
   }
   button {
     padding: 8px;
@@ -24,9 +41,41 @@ div {
     }
   }
 }
+}
+
 .cards {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   gap: 50px;
   align-items: center;
+}
+
+
+.search-history {
+  position:absolute;
+  top: 5px;
+  right: 20px;
+  background-color: #f9f9f9;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.log-out {
+  padding: 10px 10px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 3px;
+}
+
+
+
+#pokemon-drop-down {
+  background-color: white;
+  option{
+    background-color: white;
+
+  }
 }

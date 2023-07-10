@@ -3,6 +3,9 @@ export interface IPokemon {
   imageUrl?: string;
   url: string;
   id?: number;
+  sprites?: {
+    front_default: string;
+  };
 }
 export interface IPokemonDetails {
   id: number;
@@ -10,7 +13,7 @@ export interface IPokemonDetails {
   height: number;
   weight: number;
   types: string[];
-  species: string;
+  // species: string;
   stats: IStats[],
 }
 

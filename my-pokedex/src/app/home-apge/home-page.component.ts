@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IPokemon } from '../models/pokemon.model';
 import { PokemonDataService } from '../service/pokemon-data-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -10,11 +11,20 @@ import { PokemonDataService } from '../service/pokemon-data-service';
 export class HomePageComponent implements OnInit {
   pokemons: IPokemon[] = [];
   searchText: string = '';
-  searchTextType: string = '';
-  constructor(private pokemonDataService: PokemonDataService) {}
+  selectedType: string = '';
+  searchHistory: string[] = [];
+
+  constructor(private pokemonDataService: PokemonDataService, private router: Router) {}
+
   ngOnInit(): void {
     this.pokemonDataService.getAllPokemons();
     this.displayAllPokemons();
+    this.searchHistory = this.getSearchHistory();
+  }
+
+  logOut(): void {
+    localStorage.removeItem('loggedIn');
+    this.router.navigate(['/login-page']);
   }
 
   displayAllPokemons(): void {
@@ -22,31 +32,65 @@ export class HomePageComponent implements OnInit {
   }
 
   searchByNameAndType(): void {
-    if (this.searchText === '' && this.searchTextType === '') {
+    if (this.searchText === '' && this.selectedType === '') {
       this.pokemons = [...this.pokemonDataService.pokemons];
     } else {
+      if (this.searchText) {
+        this.saveItemToSearchHistory(this.searchText);
+      }
       const idOfSelectedPokemons: number[] = [];
       this.pokemons = [];
-      for (const pokemonDetails of this.pokemonDataService.pokemonsDetails) {
-        const nameMatches =
-          this.searchText === '' ||
-          pokemonDetails.name.startsWith(this.searchText);
-        const typeMatches =
-          this.searchTextType === '' ||
-          pokemonDetails.types.some((type) =>
-            type.startsWith(this.searchTextType)
-          );
-        if (nameMatches && typeMatches) {
+      this.pokemonDataService.pokemonsDetails.forEach((pokemonDetails) => {
+        if (
+          this.nameMatches(pokemonDetails) &&
+          this.typeMatches(pokemonDetails)
+        ) {
           idOfSelectedPokemons.push(pokemonDetails.id);
         }
-      }
-      for (const id of idOfSelectedPokemons) {
-        for (const pokemon of this.pokemonDataService.pokemons) {
-          if (pokemon.id === id) {
-            this.pokemons.push(pokemon);
-          }
-        }
-      }
+      });
+      this.filterIdOfPokemons(idOfSelectedPokemons);
     }
+  }
+
+  saveItemToSearchHistory(pokemonName: string): void {
+    const searchHistory = this.getSearchHistory();
+    searchHistory.unshift(pokemonName);
+    this.searchHistory = searchHistory.slice(0, 5);
+    localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
+    console.log(searchHistory);
+  }
+
+  getSearchHistory(): string[] {
+    const searchHistory = localStorage.getItem('searchHistory');
+    return searchHistory ? JSON.parse(searchHistory) : [];
+  }
+
+  nameMatches(pokemonDetails: any): boolean {
+    return (
+      this.searchText === '' || pokemonDetails.name.startsWith(this.searchText)
+    );
+  }
+
+  typeMatches(pokemonDetails: any): boolean {
+    return (
+      this.selectedType === '' ||
+      pokemonDetails.types.some((type: string) =>
+        type.startsWith(this.selectedType)
+      )
+    );
+  }
+
+  filterIdOfPokemons(idOfSelectedPokemons: number[]) {
+    idOfSelectedPokemons.forEach((id) => {
+      this.pokemonDataService.pokemons.forEach((pokemon) => {
+        if (pokemon.id === id) {
+          this.pokemons.push(pokemon);
+        }
+      });
+    });
+  }
+
+  get types(): string[] {
+    return this.pokemonDataService.types;
   }
 }
