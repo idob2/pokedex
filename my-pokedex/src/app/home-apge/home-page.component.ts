@@ -26,7 +26,9 @@ export class HomePageComponent implements OnInit {
     localStorage.removeItem('loggedIn');
     this.router.navigate(['/login-page']);
   }
-
+  maps(): void{
+    this.router.navigate(['home-page/google-maps']);
+  }
   displayAllPokemons(): void {
     this.pokemons = this.pokemonDataService.pokemons;
   }

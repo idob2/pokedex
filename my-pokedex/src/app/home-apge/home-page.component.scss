@@ -7,6 +7,14 @@
   
 }
 
+%shared-button{
+  padding: 10px 10px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 3px;
+}
+
 .main-div{
   @extend %shared-divs;
 .search-pokemon {
@@ -63,14 +71,19 @@
 }
 
 .log-out {
-  padding: 10px 10px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 3px;
+  @extend %shared-button;
+}
+
+.google-maps {
+  @extend %shared-button;
+  margin-left: 3px;
 }
 
 
+h1{
+  text-align: center;
+  font-size:40px;
+}
 
 #pokemon-drop-down {
   background-color: white;
