@@ -1,4 +1,11 @@
-<div>
+<button class="log-out" (click)="logOut()">Log out</button>
+
+<div class="search-history">
+  <div *ngFor="let search of searchHistory; let i = index">
+    {{ i + 1 }}. {{ search }}
+  </div>
+</div>
+<div class="main-div">
   <div class="search-pokemon">
     <input
       type="text"
@@ -6,17 +13,17 @@
       [(ngModel)]="searchText"
       placeholder="Search by pokemon name"
       (keyup.enter)="searchByNameAndType()"
+      list="pokemon-drop-down"
     />
+    <datalist id="pokemon-drop-down">
+      <option *ngFor="let search of searchHistory" [value]="search"></option>
+    </datalist>
   </div>
 
   <div class="search-pokemon-type">
-    <input
-      type="text"
-      class="search"
-      [(ngModel)]="searchTextType"
-      placeholder="Search by pokemon type"
-      (keyup.enter)="searchByNameAndType()"
-    />
+    <select [(ngModel)]="selectedType" class="search" (keyup.enter)="searchByNameAndType()">
+      <option *ngFor="let type of types" [value]="type">{{ type || 'All Types' }}</option>
+    </select>
     <button class="search-by-type-button" (click)="searchByNameAndType()">
       Search
     </button>

@@ -9,7 +9,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   styleUrls: ['./pokemon-details.component.scss'],
 })
 export class PokemonDetailsComponent implements OnInit {
-  @Input() pokemonDetails: IPokemonDetails = {id: 0, name: '', height: 0, weight: 0, species: '', types: [], stats: [] };
+  @Input() pokemonDetails: IPokemonDetails = {id: 0, name: '', height: 0, weight: 0, types: [], stats: [] };
   @Input() imageUrl: string ="";
   constructor(
     private pokemonDataService: PokemonDataService,

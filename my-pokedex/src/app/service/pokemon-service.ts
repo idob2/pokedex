@@ -1,6 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IPokemon, IResults } from '../models/pokemon.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -14,12 +16,13 @@ export class PokemonService implements OnInit {
     }
 
   
-  async fetchAllPokemons(): Promise<IPokemon[]> {
-    const response = await this.http.get<IResults>(this.url).toPromise();
-    return response.results;
-  }
-  async fetchSinglePokemon(pokemonUrl: string): Promise<any> {
-    const response = await this.http.get<any>(pokemonUrl).toPromise();
-    return response;
-  }
+    fetchAllPokemons(): Observable<IPokemon[]> {
+      return this.http.get<IResults>(this.url).pipe(
+        map(response => response.results)
+      );
+    }
+    
+    fetchSinglePokemon(pokemonUrl: string): Observable<any> {
+      return this.http.get<any>(pokemonUrl);
+    }
 }
