@@ -9,7 +9,7 @@ import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 import { HomePageComponent } from './home-apge/home-page.component';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { AuthGuard } from './service/can-activate-service';
+import { AuthGuard } from './service/authGuard';
 
 const appRoutes: Routes = [
   { path: 'pokemon-details/:id', component: PokemonDetailsComponent, canActivate:[AuthGuard] },
