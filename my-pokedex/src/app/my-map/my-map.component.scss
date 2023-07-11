@@ -1,19 +1,43 @@
 #map {
-    height: 95vh; /* The height is 400 pixels */
-    width: 100%; /* The width is the width of the web page */
+    margin-top: 10px;
+    height: 93vh; 
+    width: 98.9vw;
+    margin-left: 0px; 
   
 }
-
-.map-autocomplete {
-    position: absolute;
+%shared-items{
     padding: 8px;
+    margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 210px;
-    height: 25px;
-    margin-top: 10px;
-    margin-left: 200px;
-    z-index: 1;
+}
 
-  }
+.button-input-div{
+    .map-autocomplete {
+        @extend %shared-items;
+        width: 210px;
+        height: 25px;
+    }
+    .direction-button{
+        @extend %shared-items;
+        background-color: white;
+        width: 150px;
+        font-weight: bold;
+        height: 43px;
+    }
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+    margin-left: 200px;
+    margin-top: 10px;
+}
+
+.back-button{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height:30px
+}

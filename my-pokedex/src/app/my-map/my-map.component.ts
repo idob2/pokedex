@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-my-map',
   templateUrl: './my-map.component.html',
@@ -8,14 +8,16 @@ import { Component, OnInit } from '@angular/core';
 export class MyMapComponent implements OnInit {
   map: any;
   autocomplete: any;
+  workCordinations = new google.maps.LatLng(32.064578, 34.771863 );
+  homeCordinations = new google.maps.LatLng(32.171712, 34.922583 );
+  constructor(private router: Router){}
   ngOnInit(): void {
     this.initMap();
   }
-
+  goBack(): void{
+    this.router.navigate(["/home-page"]);
+  }
   async initMap(): Promise<void> {
-    const position = { lat: 32.064578, lng: 34.771863 };
-
-    
     const { Map } = (await google.maps.importLibrary(
       'maps'
     )) as google.maps.MapsLibrary;
@@ -25,13 +27,12 @@ export class MyMapComponent implements OnInit {
 
     this.map = new Map(document.getElementById('map') as HTMLElement, {
       zoom: 15,
-      center: position,
-      mapId: 'DEMO_MAP_ID',
+      center: this.workCordinations,
+      mapId: '530f0e4e8ae594b',
     });
-
     const marker = new AdvancedMarkerElement({
       map: this.map,
-      position: position,
+      position: this.workCordinations,
       title: 'Moveo Offices',
     });
     this.autocomplete = new google.maps.places.Autocomplete(
@@ -53,6 +54,22 @@ export class MyMapComponent implements OnInit {
         position: place.geometry.location,
         title: place.name,
       });
+    });
+  }
+
+  calculateRout(): void {
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(this.map);
+    let routeRequest = {
+      origin: this.workCordinations,
+      destination: this.homeCordinations,
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+    directionsService.route(routeRequest, function(result, status) {
+      if (status == 'OK') {
+        directionsRenderer.setDirections(result);
+      }
     });
   }
 }
