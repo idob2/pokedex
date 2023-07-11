@@ -35,7 +35,33 @@
     margin-left: 200px;
     margin-top: 10px;
 }
+.directions{
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    list-style: none; 
+    height: fit-content;
+    justify-content: left;
+    align-items: center;
+    width: 300px;
+    gap: 10px;
+    top: 150px;
+     .direction{
+        padding: 5px;
+        border: 2px solid black;
+        background-color: wheat;
 
+        button{
+            margin-left: 275px;
+            background-color: transparent;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+    }
+    
+}
 .back-button{
     border: 1px solid #ccc;
     border-radius: 4px;

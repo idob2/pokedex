@@ -1,19 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-my-map',
   templateUrl: './my-map.component.html',
   styleUrls: ['./my-map.component.scss'],
 })
 export class MyMapComponent implements OnInit {
-  map: any;
-  autocomplete: any;
-  infoWindow: any;
-  markers: any[] = [];
+  map!: google.maps.Map;
+  autocomplete!: google.maps.places.Autocomplete;
+  infoWindow!: google.maps.InfoWindow;
+  originMarker: google.maps.Marker = new google.maps.Marker({
+    map: this.map,
+    position: null,
+  });
+  destinationMarker: google.maps.Marker = new google.maps.Marker({
+    map: this.map,
+    position: null,
+  });
 
+  directions: {
+    direction: google.maps.DirectionsRenderer;
+    origin: string;
+    destination: string;
+  }[] = [];
   workLatLng = new google.maps.LatLng(32.064578, 34.771863);
   homeLatLng = new google.maps.LatLng(32.171712, 34.922583);
-
 
   constructor(private router: Router) {}
 
@@ -37,11 +49,12 @@ export class MyMapComponent implements OnInit {
       mapId: '530f0e4e8ae594b',
     });
 
-    this.map.addListener('click', (event: any) => {
-      this.addMarker(event.latLng);
+    this.map.addListener('click', (event: google.maps.KmlMouseEvent) => {
+      if (event.latLng) {
+        this.addMarker(event.latLng);
+      }
     });
-
-    this.markers = [];
+    this.directions = [];
 
     this.infoWindow = new google.maps.InfoWindow();
 
@@ -82,59 +95,114 @@ export class MyMapComponent implements OnInit {
       });
     });
   }
-  addMarker(position: any): void {
+
+  addMarker(position: google.maps.LatLng): void {
     const marker = new google.maps.Marker({
       position: position,
       map: this.map,
     });
-    marker.addListener('click', () => {
-      marker.setPosition(null);
-    });
-    this.markers.push(marker);
+    marker.addListener('click', () => marker.setPosition(null));
+    if (this.originMarker.getPosition()) {
+      this.destinationMarker = marker;
+    } else {
+      this.originMarker = marker;
+    }
 
-    if(this.markers.length === 2){
-        this.calcAndDisplayDirection();
+    if (
+      this.originMarker.getPosition() &&
+      this.destinationMarker.getPosition()
+    ) {
+      const originPosition =
+        this.originMarker.getPosition() as google.maps.LatLng;
+      const destinationPosition =
+        this.destinationMarker.getPosition() as google.maps.LatLng;
+      this.calcAndDisplayDirection(originPosition, destinationPosition);
     }
   }
 
-  calcAndDisplayDirection(): void {
+  calcAndDisplayDirection(
+    originMarker: google.maps.LatLng,
+    destinationMarker: google.maps.LatLng
+  ): void {
     const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+      preserveViewport: true,
+    });
     directionsRenderer.setMap(this.map);
-    
+
     const routeRequest = {
-      origin: this.markers[0].position,
-      destination: this.markers[1].position,
+      origin: originMarker,
+      destination: destinationMarker,
       travelMode: google.maps.TravelMode.DRIVING,
     };
-    
-    directionsService.route(routeRequest, (result: any, status: any) => {
-      if (status == 'OK') {
+
+    directionsService.route(routeRequest, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
+        this.getStreetAddress(this.originMarker)
+          .then((firstStreetAddress) => {
+            this.getStreetAddress(this.destinationMarker)
+              .then((secondtStreetAddress) => {
+                this.directions.push({
+                  direction: directionsRenderer,
+                  origin: firstStreetAddress.toString(),
+                  destination: secondtStreetAddress.toString(),
+                });
+                this.map.setZoom(15);
+                this.clearMarkers();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     });
-  
-    this.clearMarkers();
   }
 
-  showDirections(): void {
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(this.map);
-    const routeRequest = {
-      origin: this.workLatLng,
-      destination: this.homeLatLng,
-      travelMode: google.maps.TravelMode.DRIVING,
-    };
-    directionsService.route(routeRequest, function (result, status) {
-      if (status == 'OK') {
-        directionsRenderer.setDirections(result);
+  clearMarkers(): void {
+    this.originMarker.setPosition(null);
+    this.destinationMarker.setPosition(null);
+  }
+
+  removeRoute(origin: string, destination: string): void {
+    this.directions.forEach((direction, index) => {
+      if (
+        direction.origin === origin &&
+        direction.destination === destination
+      ) {
+        direction.direction.setDirections(null);
+        direction.direction.setMap(null);
+        this.directions.splice(index, 1);
       }
     });
   }
-  clearMarkers(): void {
-    this.markers[0].setPosition(null);
-    this.markers[1].setPosition(null);
-    this.markers.splice(0,2);
+
+  getStreetAddress(marker: google.maps.Marker): Promise<string> {
+    const geocoder = new google.maps.Geocoder();
+    const latLng = marker.getPosition();
+
+    return new Promise((resolve, reject) => {
+      geocoder.geocode(
+        { location: latLng },
+        (
+          results: google.maps.GeocoderResult[] | null,
+          status: google.maps.GeocoderStatus
+        ) => {
+          if (
+            status === google.maps.GeocoderStatus.OK &&
+            results &&
+            results[0]
+          ) {
+            const streetAddress = results[0].formatted_address;
+            resolve(streetAddress);
+          } else {
+            reject('Unable to retrieve street address for the marker.');
+          }
+        }
+      );
+    });
   }
 }
