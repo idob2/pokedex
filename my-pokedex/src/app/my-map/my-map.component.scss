@@ -1,0 +1,19 @@
+#map {
+    height: 95vh; /* The height is 400 pixels */
+    width: 100%; /* The width is the width of the web page */
+  
+}
+
+.map-autocomplete {
+    position: absolute;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 210px;
+    height: 25px;
+    margin-top: 10px;
+    margin-left: 200px;
+    z-index: 1;
+
+  }
