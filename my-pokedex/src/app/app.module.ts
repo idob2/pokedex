@@ -10,7 +10,6 @@ import { HomePageComponent } from './home-apge/home-page.component';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthGuard } from './service/authGuard';
-import { GoogleMapsComponent } from './google-maps/google-maps.component';
 import { MyMapComponent } from './my-map/my-map.component';
 
 const appRoutes: Routes = [
@@ -28,7 +27,6 @@ const appRoutes: Routes = [
     HomePageComponent,
     PokemonDetailsComponent,
     LoginPageComponent,
-    GoogleMapsComponent,
     MyMapComponent,
   ],
   imports: [
